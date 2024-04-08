@@ -1,4 +1,4 @@
-const dataList = [
+export default [
   {
     name: "Kim Hyun",
     userImage: "https://picsum.photos/100?random=3",
@@ -30,5 +30,3 @@ const dataList = [
     filter: "lofi",
   },
 ];
-
-export default dataList;

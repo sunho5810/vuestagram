@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div v-if="tabShowContent === 'POST'">
+    <div v-if="tabShowContent === 0">
       <Post v-for="(data, i) in dataList" :key="i" :data="data" />
     </div>
 
     <!-- 필터선택페이지 -->
-    <div v-if="tabShowContent === 'FILTERS'">
+    <div v-if="tabShowContent === 1">
       <div class="upload-image" :style="{backgroundImage: `url(${uploadDataURL})`}"></div>
       <div class="filters">
         <div class="filter-1"></div>
@@ -17,10 +17,10 @@
     </div>
 
     <!-- 글작성페이지 -->
-    <div v-if="tabShowContent === 'WRITE'">
-      <div class="upload-image"></div>
+    <div v-if="tabShowContent === 2">
+      <div class="upload-image" :style="{backgroundImage: `url(${uploadDataURL})`}"></div>
       <div class="write">
-        <textarea class="write-box">write!</textarea>
+        <textarea class="write-box" @input="send">write!</textarea>
       </div>
     </div>
   </div>
@@ -36,9 +36,14 @@ export default {
   },
   props: {
     dataList: Array,
-    tabShowContent: String,
+    tabShowContent: Number,
     uploadDataURL: String,
   },
+  methods: {
+    send(e){
+      this.$emit('sendText', e.target.value);
+    }
+  }
 };
 </script>
 

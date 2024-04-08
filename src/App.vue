@@ -4,15 +4,21 @@
       <li>Cancel</li>
     </ul>
     <ul class="header-button-right">
-      <li>Next</li>
+      <li v-if="tabShowContent === 1" @click="tabShowContent++">Next</li>
+      <li v-if="tabShowContent === 2" @click="publish">발행</li>
     </ul>
     <img src="./assets/logo.png" class="logo" />
   </div>
-  <button v-for="(tabs, i) in tabsList" :key="i" @click="tabFunc(tabs)">
+  <button v-for="(tabs, i) in tabsList" :key="i" @click="tabFunc(i)">
     {{ tabs }}
   </button>
 
-  <Container :dataList="dataList" :tabShowContent="tabShowContent" :uploadDataURL="uploadDataURL"/>
+  <Container
+    :dataList="dataList"
+    :tabShowContent="tabShowContent"
+    :uploadDataURL="uploadDataURL"
+    @sendText="getText($event)"
+  />
 
   <button @click="moreView">더보기</button>
 
@@ -52,9 +58,10 @@ export default {
     return {
       dataList: dataList,
       tabsList: ["POST", "FILTERS", "WRITE"],
-      tabShowContent: "POST",
+      tabShowContent: 0,
       getCount: 0,
       uploadDataURL: "",
+      recText: "",
     };
   },
   methods: {
@@ -66,7 +73,7 @@ export default {
       실패 시 실행할 코드는 .catch(콜백함수)를 이용한다.
      */
       axios
-        .get(`https://codingapple1.github.io/vue/more${this.getCount}.json`)
+        .get(`https://codingapple1.github.io/vue/more${this.getCount % 2}.json`)
         /* function(){}과 ()=>{} (익명함수)의 차이
         function의 this는 함수 안에서 재정의 해주지만
         ()=>{}의 this는 기존에 쓰던 this를 사용한다.
@@ -79,8 +86,8 @@ export default {
           this.getCount++;
         });
     },
-    tabFunc(tab) {
-      this.tabShowContent = tab;
+    tabFunc(idx) {
+      this.tabShowContent = idx;
     },
     upload(e) {
       let files = e.target.files;
@@ -93,7 +100,24 @@ export default {
       let url = URL.createObjectURL(files[0]);
       // console.log("url?", url);
       this.uploadDataURL = url;
-      this.tabShowContent = "FILTERS";
+      this.tabShowContent = 1;
+    },
+    getText(str){
+      this.recText = str;
+    },
+    publish() {
+      var myPost = {
+        name: "Ju Sunho",
+        userImage: "https://picsum.photos/100?random=3",
+        postImage: this.uploadDataURL,
+        likes: 777,
+        date: "April 9",
+        liked: false,
+        content: this.recText,
+        filter: "perpetua",
+      };
+      this.dataList.unshift(myPost);
+      this.tabShowContent = 0;
     },
   },
   components: {

@@ -9,7 +9,7 @@
     <img src="./assets/logo.png" class="logo" />
   </div>
 
-  <Container />
+  <Container :dataList="dataList"/>
 
   <div class="footer">
     <ul class="footer-button-plus">
@@ -22,13 +22,13 @@
 <script>
 
 import Container from './components/Container.vue'
-import data from './assets/data'
+import dataList from './assets/data'
 
 export default {
   name: 'App',
   data(){
     return {
-      dataList: data,
+      dataList: dataList,
     }
   },
   components: {

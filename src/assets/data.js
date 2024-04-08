@@ -1,4 +1,4 @@
-const data = [
+const dataList = [
   {
     name: "Kim Hyun",
     userImage: "https://picsum.photos/100?random=3",
@@ -31,4 +31,4 @@ const data = [
   },
 ];
 
-export default data;
+export default dataList;

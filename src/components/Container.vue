@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Post />
-    <Post />
-    <Post />
+    <Post v-for="(data, i) in dataList" :key="i" :data="data"/>
+    <!-- <Post />
+    <Post /> -->
   </div>
 </template>
 
@@ -13,6 +13,9 @@ export default {
     name: "layout-container",
     components: {
         Post,
+    },
+    props:{
+      dataList: Array,
     }
 };
 </script>

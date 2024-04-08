@@ -8,8 +8,9 @@
     </ul>
     <img src="./assets/logo.png" class="logo" />
   </div>
+  <button v-for="(tabs, i) in tabsList" :key="i" @click="tabFunc(tabs)">{{ tabs }}</button>
 
-  <Container :dataList="dataList"/>
+  <Container :dataList="dataList" :showWhat="tabShowContent"/>
 
   <button @click="moreView">더보기</button>
 
@@ -19,6 +20,7 @@
       <label for="file" class="input-plus">+</label>
     </ul>
  </div>
+
 </template>
 
 <script>
@@ -47,11 +49,15 @@ export default {
   name: 'App',
   data(){
     return {
-      getCount: 0,
       dataList: dataList,
+      tabsList: ["POST", "FILTERS", "WRITE"],
+      tabShowContent: "POST",
     }
   },
   methods:{
+    tabFunc(tab){
+      this.tabShowContent = tab;
+    },
     moreView(){
       /* axios 2 : 
       get - 선언한 axios를 이용하여 axios.get(url)로 가져온다.

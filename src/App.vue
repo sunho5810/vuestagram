@@ -11,6 +11,8 @@
 
   <Container :dataList="dataList"/>
 
+  <button @click="moreView">더보기</button>
+
   <div class="footer">
     <ul class="footer-button-plus">
       <input type="file" id="file" class="inputfile" />
@@ -24,11 +26,51 @@
 import Container from './components/Container.vue'
 import dataList from './assets/data'
 
+/* ajax width axios 1 : 개념
+  server - 데이터 요청하면 주는 곳
+  get - url을 이용해 서버에서 데이터를 가져오는 요청
+  post - url을 이용해 서버로 데이터를 보내는 요청
+  ajax - get과 post를 하면 브라우저가 무조건 새로고침 되는데 ajax를 이용하면
+        새로고침 없이 get과 post를 사용할 수 있음
+*/
+/* ajax width axios 2 : 
+  ajax요청을 하려면?
+  1. axios 라이브러리 사용 
+  2. 기본 fetch api함수 사용
+  두 방법이 흡사 하지만 fetch는 브라우저에서 지원해주는 기능이라
+  대부분 axios라이브러리를 사용
+*/
+/* axios 1 : import axios from 'axios'로 선언 */
+import axios from 'axios'
+
 export default {
   name: 'App',
   data(){
     return {
+      getCount: 0,
       dataList: dataList,
+    }
+  },
+  methods:{
+    moreView(){
+      /* axios 2 : 
+      get - 선언한 axios를 이용하여 axios.get(url)로 가져온다.
+      post - 선언한 axios를 이용하여 axios.post(url)로 보내준다.
+      성공 시 실행할 코드는 .then(콜백함수)를 이용한다.
+      실패 시 실행할 코드는 .catch(콜백함수)를 이용한다.
+     */
+      axios.get(`https://codingapple1.github.io/vue/more${this.getCount}.json`)
+      /* function(){}과 ()=>{} (익명함수)의 차이
+        function의 this는 함수 안에서 재정의 해주지만
+        ()=>{}의 this는 기존에 쓰던 this를 사용한다.
+        따라서 뷰에서는 익명함수를 쓰는것을 더 권장한다.
+      */
+      .then((result) => {
+        console.log("성공!!", result.data);
+        /* push - 배열에 데이터 삽입 */
+        this.dataList.push(result.data);
+        this.getCount++;
+      });
     }
   },
   components: {

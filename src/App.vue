@@ -8,25 +8,26 @@
     </ul>
     <img src="./assets/logo.png" class="logo" />
   </div>
-  <button v-for="(tabs, i) in tabsList" :key="i" @click="tabFunc(tabs)">{{ tabs }}</button>
+  <button v-for="(tabs, i) in tabsList" :key="i" @click="tabFunc(tabs)">
+    {{ tabs }}
+  </button>
 
-  <Container :dataList="dataList" :showWhat="tabShowContent"/>
+  <Container :dataList="dataList" :tabShowContent="tabShowContent" :uploadDataURL="uploadDataURL"/>
 
   <button @click="moreView">더보기</button>
 
   <div class="footer">
     <ul class="footer-button-plus">
-      <input type="file" id="file" class="inputfile" />
+      <!-- input multiple : multiple 속성을 넣으면 여러개를 input으로 받아올 수 있음 -->
+      <input @change="upload" type="file" id="file" class="inputfile" />
       <label for="file" class="input-plus">+</label>
     </ul>
- </div>
-
+  </div>
 </template>
 
 <script>
-
-import Container from './components/Container.vue'
-import dataList from './assets/data'
+import Container from "./components/Container.vue";
+import dataList from "./assets/data";
 
 /* ajax width axios 1 : 개념
   server - 데이터 요청하면 주는 곳
@@ -43,123 +44,139 @@ import dataList from './assets/data'
   대부분 axios라이브러리를 사용
 */
 /* axios 1 : import axios from 'axios'로 선언 */
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-  name: 'App',
-  data(){
+  name: "App",
+  data() {
     return {
       dataList: dataList,
       tabsList: ["POST", "FILTERS", "WRITE"],
       tabShowContent: "POST",
-    }
+      getCount: 0,
+      uploadDataURL: "",
+    };
   },
-  methods:{
-    tabFunc(tab){
-      this.tabShowContent = tab;
-    },
-    moreView(){
+  methods: {
+    moreView() {
       /* axios 2 : 
       get - 선언한 axios를 이용하여 axios.get(url)로 가져온다.
       post - 선언한 axios를 이용하여 axios.post(url)로 보내준다.
       성공 시 실행할 코드는 .then(콜백함수)를 이용한다.
       실패 시 실행할 코드는 .catch(콜백함수)를 이용한다.
      */
-      axios.get(`https://codingapple1.github.io/vue/more${this.getCount}.json`)
-      /* function(){}과 ()=>{} (익명함수)의 차이
+      axios
+        .get(`https://codingapple1.github.io/vue/more${this.getCount}.json`)
+        /* function(){}과 ()=>{} (익명함수)의 차이
         function의 this는 함수 안에서 재정의 해주지만
         ()=>{}의 this는 기존에 쓰던 this를 사용한다.
         따라서 뷰에서는 익명함수를 쓰는것을 더 권장한다.
       */
-      .then((result) => {
-        console.log("성공!!", result.data);
-        /* push - 배열에 데이터 삽입 */
-        this.dataList.push(result.data);
-        this.getCount++;
-      });
-    }
+        .then((result) => {
+          // console.log("성공!!", result.data);
+          /* push - 배열에 데이터 삽입 */
+          this.dataList.push(result.data);
+          this.getCount++;
+        });
+    },
+    tabFunc(tab) {
+      this.tabShowContent = tab;
+    },
+    upload(e) {
+      let files = e.target.files;
+      // console.log("files?", files[0]);
+      /* file upload 1 : 이미지 업로드 한걸 보여주려면?
+        1. FileReader()
+        2. URL.createObjectURL()
+      */
+      /* URL.createObjectURL() : 대상의 url을 blob 데이터로 가져옴 */
+      let url = URL.createObjectURL(files[0]);
+      // console.log("url?", url);
+      this.uploadDataURL = url;
+      this.tabShowContent = "FILTERS";
+    },
   },
   components: {
     Container,
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
-  body {
-    margin: 0;
-  }
-  ul {
-    padding: 5px;
-    list-style-type: none;
-  }
-  .logo {
-    width: 22px;
-    margin: auto;
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 13px;
-  }
-  .header {
-    width: 100%;
-    height: 40px;
-    background-color: white;
-    padding-bottom: 8px;
-    position: sticky;
-    top: 0;
-  }
-  .header-button-left {
-    color: skyblue;
-    float: left;
-    width: 50px;
-    padding-left: 20px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  .header-button-right {
-    color: skyblue;
-    float: right;
-    width: 50px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  .footer {
-    width: 100%;
-    position: sticky;
-    bottom: 0;
-    padding-bottom: 10px;
-    background-color: white;
-  }
-  .footer-button-plus {
-    width: 80px;
-    margin: auto;
-    text-align: center;
-    cursor: pointer;
-    font-size: 24px;
-    padding-top: 12px;
-  }
-  .sample-box {
-    width: 100%;
-    height: 600px;
-    background-color: bisque;
-  }
-  .inputfile {
-    display: none;
-  }
-  .input-plus {
-    cursor: pointer;
-  }
-  #app {
-    box-sizing: border-box;
-    font-family: "consolas";
-    margin-top: 60px;
-    width: 100%;
-    max-width: 460px;
-    margin: auto;
-    position: relative;
-    border-right: 1px solid #eee;
-    border-left: 1px solid #eee;
-  }
+body {
+  margin: 0;
+}
+ul {
+  padding: 5px;
+  list-style-type: none;
+}
+.logo {
+  width: 22px;
+  margin: auto;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 13px;
+}
+.header {
+  width: 100%;
+  height: 40px;
+  background-color: white;
+  padding-bottom: 8px;
+  position: sticky;
+  top: 0;
+}
+.header-button-left {
+  color: skyblue;
+  float: left;
+  width: 50px;
+  padding-left: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.header-button-right {
+  color: skyblue;
+  float: right;
+  width: 50px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.footer {
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+  padding-bottom: 10px;
+  background-color: white;
+}
+.footer-button-plus {
+  width: 80px;
+  margin: auto;
+  text-align: center;
+  cursor: pointer;
+  font-size: 24px;
+  padding-top: 12px;
+}
+.sample-box {
+  width: 100%;
+  height: 600px;
+  background-color: bisque;
+}
+.inputfile {
+  display: none;
+}
+.input-plus {
+  cursor: pointer;
+}
+#app {
+  box-sizing: border-box;
+  font-family: "consolas";
+  margin-top: 60px;
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+  position: relative;
+  border-right: 1px solid #eee;
+  border-left: 1px solid #eee;
+}
 </style>

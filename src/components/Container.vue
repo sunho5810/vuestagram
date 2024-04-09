@@ -8,11 +8,7 @@
     <div v-if="tabShowContent === 1">
       <div class="upload-image" :style="{backgroundImage: `url(${uploadDataURL})`}"></div>
       <div class="filters">
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
+        <FilterBox v-for="(item, i) in filterData" :key="i" :filterData="item" :uploadDataURL="uploadDataURL"></FilterBox>
       </div>
     </div>
 
@@ -28,11 +24,19 @@
 
 <script>
 import Post from "./Post.vue";
+import FilterBox from "./FilterBox.vue";
+import filterData from '../assets/filterData';
 
 export default {
   name: "layout-container",
+  data(){
+    return {
+      filterData: filterData,
+    }
+  },
   components: {
     Post,
+    FilterBox,
   },
   props: {
     dataList: Array,

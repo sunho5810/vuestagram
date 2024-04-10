@@ -4,7 +4,19 @@
     :class="filterData"
     :style="{ backgroundImage: `url(${uploadDataURL})` }"
   >
-    {{ filterData }}
+    <!-- slot 1 : 
+        props보다 더 직관적이고 번거로운 작업 없이 사용할 수 있다.
+    -->
+    <!-- slot 3 : 여러개
+      name=""을 사용하여 구분해준다.
+    -->
+      <!-- slot 5 : slot props
+        slot을 사용할 때 부모가 자식의 데이터를 필요로 할 때 사용
+        slot에 :작명="데이터" 으로 바인딩 해서 부모에게 전달
+      -->
+    <!-- <slot name="a"></slot>
+    <slot name="b"></slot> -->
+    <slot></slot>
   </div>
 </template>
 

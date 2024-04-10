@@ -8,7 +8,23 @@
     <div v-if="tabShowContent === 1">
       <div class="upload-image" :style="{backgroundImage: `url(${uploadDataURL})`}"></div>
       <div class="filters">
-        <FilterBox v-for="(item, i) in filterData" :key="i" :filterData="item" :uploadDataURL="uploadDataURL"></FilterBox>
+        <!-- slot 2 : 
+          부모 컴포넌트 사이에 데이터를 넣으면 자식 컴포넌트에 만들어둔 slot안으로 삽입된다.
+          태그 안에 데이터 바인딩 할 때만 사용 가능. 속성으로는X
+          태그도 바인딩 가능!
+        -->
+        <FilterBox v-for="(item, i) in filterData" :key="i" :filterData="item" :uploadDataURL="uploadDataURL">
+          <!-- slot 4 : 데이터 여러개를 slot으로 보낼 때
+            template태그에 v-slot:지어준name 으로 보내준다.
+          -->
+          <!-- slot 5 : slot props 
+            v-slot:default="작명"해서
+            {{ 작명.데이터 }}로 받아서 사용한다.
+          -->
+          <!-- <template v-slot:a>데이터1</template>
+            <template v-slot:b>데이터2</template> -->
+            <span>{{ item }}</span>
+        </FilterBox>
       </div>
     </div>
 
